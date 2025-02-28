@@ -1,0 +1,7 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Ignore shapefiles in data-raw
+data-raw/shapefiles/
