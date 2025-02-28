@@ -1,10 +1,12 @@
 ---
-title: "Location Exploration"
-author: "Maddee Wiggins (FlowWest)"
+title: "Clean and Filter NHD Layers"
+author: "Maddee Wiggins"
 date: "`r Sys.Date()`"
 output: html_document
 editor_options: 
   chunk_output_type: console
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -15,25 +17,12 @@ library(sf)
 library(tidyverse)
 ```
 
-### Objectives
+### Download NHD layers for Klamath Basin
 
-1.  download NHD layers for Klamath Basin
 -   NHDplus geodatabase downloaded from: <https://www.sciencebase.gov/catalog/item/5d30c29ae4b01d82ce84aa5e>
 -   NHDplus user guide: <https://pubs.usgs.gov/of/2019/1096/ofr20191096.pdf>
-2.  explore NHD layer and HUC options
-3.  a. assign river miles based on mainstem NHD
-b. assign nearest river mile to things like RST, gages, based on lat/long
-4.  visualize huc levels 
-5.  apply to datasets to assign river miles, hucs
 
-TODO:
-* Pair with Badhia on processing WQ data with stream information 
-* Look up SOP for calculating river miles 
-* Process NHD data - ensure right rivers, collapsed to single lines, correct distances, no fragments 
-* Store NHD data in S3 bucket 
-* Pre-process all rivers for their river mile points and store information in RDS files 
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 hucs <- read_sf(here::here('data-raw', 'shapefiles', 'WBDHU8_Klamath_Rogue.shp')) |> 
   filter(!grepl('17', huc8)) 
 
@@ -44,6 +33,8 @@ ggplot() +
   theme_minimal()
 
 ```
+
+### Load NHD layers from geodatabase 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 layers <- st_layers(here::here('data-raw', 'shapefiles', 'NHDPLUS_H_1801_HU4_GDB.gdb'))
@@ -97,35 +88,92 @@ ggplot() +
 
 ```
 
+### Filter NHD layer to mainstem rivers/tribs
+
 ```{r message=FALSE, warning=FALSE}
 # filtering to mainstem and tribs of interest 
 
 rivers <- c('Klamath River', 'Trinity River', 'Sprague River',
             'Williamson River', 'Wood River', 'Lost River', 'Shasta River', 
             'Scott River', 'Salmon River', 'Blue Creek', 'Bogus Creek', 'Clear Creek',
-            'Indian Creek', 'Link River')
+            'Indian Creek', 'Link River', 'Jenny Creek')
 
 nhd_flowline_filtered <- nhd_flowline |> 
   filter(gnis_name %in% rivers) |> 
   st_transform(crs = "+proj=longlat +datum=WGS84") |> 
   st_zm()
 
-# TODO needs further cleaning of lines 
-
-# ggplot() +
-#   geom_sf(data = hucs) +
-#   geom_sf(data = nhd_flowline_filtered) +
-#   theme_minimal()
-
 ```
+
+### View filtered NHD layers 
 
 ```{r}
 leaflet(data = nhd_flowline_filtered) |> 
   addTiles() |> 
-  addPolylines(popup = ~gnis_name)
+  addPolylines(popup = ~paste0("name: ", gnis_name, "<br>",
+                               "id: ", gnis_id))
 ```
 
-### HUC exploration 
+```{r eval=FALSE, include=FALSE}
+st_write(nhd_flowline_filtered, "data-raw/shapefiles/tmp_nhd_shp.shp")
+```
+
+### Clean NHD layer
+
+I decided to process the NHD file in QGIS - the project is saved within the `data-raw/shapefiles` folder. 
+
+**Processing Notes:**
+
+-   Merged the trinity river NHD lines at the Whiskeytown Lake Dam
+
+-   Removed disjointed NDH layers
+
+-   Connected the Williamson River through the Klamath Marsh
+
+-   Clipped lines to not start within rivers/reservoirs
+
+-   Multiple Indian Creeks - kept Indian Creek that is confluence to Trinity River
+
+```{r}
+# Read in processed 
+
+processed_nhd <- sf::read_sf(here::here('data-raw', 'shapefiles', 'cleaned_nhd_layer.shp'))
+
+leaflet(processed_nhd) |> 
+  addTiles() |> 
+ addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
+                               "id: ", processed_nhd$gnis_id))
+
+```
+
+### Collapse NHD segments into single lines 
+
+```{r}
+
+klamath_rivers <- processed_nhd |> 
+  group_by(gnis_nm) |> 
+  summarise(geometry = st_union(geometry)) |>  
+  st_cast("MULTILINESTRING") 
+ # st_transform(crs = 32610) 
+
+leaflet(klamath_rivers) |> 
+  addTiles() |> 
+  addPolylines(popup = ~paste0(gnis_nm))
+
+```
+
+### Save cleaned rivers file 
+
+```{r}
+usethis::use_data(klamath_rivers, overwrite = TRUE)
+```
+
+```{r}
+knitr::knit_exit()
+```
+
+
+### HUC exploration
 
 ```{r}
 leaflet() |> 
@@ -153,7 +201,7 @@ leaflet() |>
 
 ```
 
-### Assign River Miles 
+### Assign River Miles
 
 ```{r}
 get_river_miles <- function(river_layer, interval_no = 10) {
@@ -204,9 +252,9 @@ leaflet() |>
 
 ```
 
-### Identify nearest river mile by lat/long   
+### Identify nearest river mile by lat/long
 
-```{r} 
+```{r}
 get_nearest_river_mile <- function(river_mile_points, locations) {
 
   distances <- st_distance(locations, river_mile_points)
@@ -232,9 +280,9 @@ leaflet() |>
 
 ```
 
-### Practical Example 
+### Practical Example
 
-Read in Temperature gage locations to find the nearest river miles 
+Read in Temperature gage locations to find the nearest river miles
 
 ```{r}
 temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> glimpse()
@@ -266,7 +314,6 @@ leaflet() |>
 
 ```
 
-
 ```{r}
 knitr::knit_exit()
 ```
@@ -293,8 +340,6 @@ leaflet() |>
 plot(river_mile_line)
 
 ```
-
-
 
 ```{r}
 # combine the NHD layer with the points
@@ -432,7 +477,6 @@ bogus_crk <- st_transform(bogus_crk, st_crs(river_mile_points)) |>
 
 ```
 
-
 ```{r}
 
 test_all <- bogus_crk |> 
@@ -447,10 +491,7 @@ ggplot() +
 
 ```
 
-
-
-cleaning data - merge with NHDFCode - remove NAs from gnis_name - filter by mainpath and innetwork == 1 - filter by fcodes that are not rivers (note: KEEP artificial paths as they are river segments) - add 8,10,12 digit HUCs using script:
-mutate(rc_huc_8 = substr(reachcode, 1, 8), rc_huc_10 = substr(reachcode, 1, 10), rc_huc_12 = substr(reachcode, 1, 12))
+cleaning data - merge with NHDFCode - remove NAs from gnis_name - filter by mainpath and innetwork == 1 - filter by fcodes that are not rivers (note: KEEP artificial paths as they are river segments) - add 8,10,12 digit HUCs using script: mutate(rc_huc_8 = substr(reachcode, 1, 8), rc_huc_10 = substr(reachcode, 1, 10), rc_huc_12 = substr(reachcode, 1, 12))
 
 river miles - make a point layer for river miles (fractions of a river mile) - sf::st_line_sample() makes points along the line, assign some X feet spacing - order segments from downstream to upstream, cumulative length moving down segments, what is the river mile at start? - each trib gets its own sequence of river miles - sf::st_nearest_feature() to find the nearest river mile to each feature (such as RST)
 
@@ -458,7 +499,8 @@ value added attributes \> hydrosequence (hydroseq) - this is flow order, so arra
 
 ### Downloading NHD using nhdPlusTools
 
-Using `nhdplusTools`. I found this to be much slower. You end up receiving many geodatabases by HUC4s that would need to be merged. The download process takes significantly longer than how it is outlined above. 
+Using `nhdplusTools`. I found this to be much slower. You end up receiving many geodatabases by HUC4s that would need to be merged. The download process takes significantly longer than how it is outlined above.
+
 ```{r eval=FALSE, include=FALSE}
 #install.packages('nhdplusTools')
 library(nhdplusTools)
@@ -477,7 +519,6 @@ ggplot() +
   geom_sf(data = hucs, aes(color = 'red')) 
 
 ```
-
 
 ```{r}
 #hucs
