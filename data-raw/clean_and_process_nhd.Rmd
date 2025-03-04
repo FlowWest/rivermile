@@ -175,13 +175,46 @@ usethis::use_data(klamath_rivers, overwrite = TRUE)
 ```{r}
 unique(klamath_rivers$river)
 
-blue <- klamath_rivers |> 
-  filter(river == "Blue Creek")
+blue_creek <- rivermile::get_river_miles(klamath_rivers, "Blue Creek")
+usethis::use_data(blue_creek, overwrite = TRUE)
 
-blue <- rivermile::get_river_miles(blue)
+bogus_creek <- rivermile::get_river_miles(klamath_rivers, "Bogus Creek")
+usethis::use_data(bogus_creek, overwrite = TRUE)
+
+clear_creek <- rivermile::get_river_miles(klamath_rivers, "Clear Creek")
+usethis::use_data(clear_creek, overwrite = TRUE)
+
+indian_creek <- rivermile::get_river_miles(klamath_rivers, "Indian Creek")
+usethis::use_data(indian_creek, overwrite = TRUE)
+
+jenny_creek <- rivermile::get_river_miles(klamath_rivers, "Jenny Creek")
+usethis::use_data(jenny_creek, overwrite = TRUE)
+
+link_river <- rivermile::get_river_miles(klamath_rivers, "Link River")
+usethis::use_data(link_river, overwrite = TRUE)
+
+link_river |> 
+  ggplot() + 
+  geom_sf()
 
 ```
 
+
+```{r eval=FALSE, include=FALSE}
+
+all_rivers <- unique(klamath_rivers$river)
+
+for(i in 1:length(all_rivers)) {
+  
+  name <- gsub(" ", "_", tolower(all_rivers[i]))
+  
+  river <- rivermile::get_river_miles(klamath_rivers, all_rivers[i])
+
+  usethis::use_data(river, overwrite = TRUE)
+}
+
+
+```
 
 ```{r}
 knitr::knit_exit()
