@@ -32,8 +32,32 @@ extract_waterbody_short <- function(names) {
 }
 
 load_river_mile_data <- function(river_name) {
-  river_mile_data <- as.data.frame(do.call(`::`, list(pkg = "rivermile", name = river_name)))
+  tryCatch({
+    # Attempt to load the data
+    river_mile_data <- as.data.frame(do.call(`::`, list(pkg = "rivermile", name = river_name)))
+    return(river_mile_data)
+  }, error = function(e) {
+    # If an error occurs, print a message and return NULL
+    message(paste("No point layer created for this river:", river_name))
+    return(NULL)
+  })
+}
 
-  return(river_mile_data)
+gage_data_format <- function(data, filter_streams = TRUE) {
+
+  tmp <- data |>
+    mutate(stream_short = extract_waterbody_short(stream)) |>
+    select(-river_mile) |>
+    filter(!is.na(longitude)) |>
+    st_as_sf(coords = c('longitude', 'latitude'), crs = 4326)
+
+  if (filter_streams == TRUE) {
+    tmp <- tmp |>
+      filter(stream_short %in% rivermile::all_klamath_rivers_line$river)
+
+    return(tmp)
+  } else {
+    return(tmp)
+  }
 
 }

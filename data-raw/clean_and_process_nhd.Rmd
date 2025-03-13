@@ -151,14 +151,14 @@ leaflet(processed_nhd) |>
 
 ```{r}
 
-klamath_rivers <- processed_nhd |> 
+all_klamath_rivers_line <- processed_nhd |> 
   rename(river = gnis_nm) |> 
   group_by(river) |> 
   summarise(geometry = st_union(geometry)) |>  
   st_cast("MULTILINESTRING") 
  # st_transform(crs = 32610) 
 
-leaflet(klamath_rivers) |> 
+leaflet(all_klamath_rivers_line) |> 
   addTiles() |> 
   addPolylines(popup = ~paste0(river))
 
@@ -167,75 +167,100 @@ leaflet(klamath_rivers) |>
 ### Save cleaned rivers file 
 
 ```{r}
-usethis::use_data(klamath_rivers, overwrite = TRUE)
+usethis::use_data(all_klamath_rivers_line, overwrite = TRUE)
 ```
 
 ## Assign River Mile Points 
 
 ```{r}
-unique(klamath_rivers$river)
+unique(all_klamath_rivers_line$river)
 
-blue_creek <- rivermile::get_river_miles(klamath_rivers, "Blue Creek")
+blue_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Blue Creek")
 usethis::use_data(blue_creek, overwrite = TRUE)
 
-bogus_creek <- rivermile::get_river_miles(klamath_rivers, "Bogus Creek")
+bogus_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Bogus Creek")
 usethis::use_data(bogus_creek, overwrite = TRUE)
 
-clear_creek <- rivermile::get_river_miles(klamath_rivers, "Clear Creek")
+clear_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Clear Creek")
 usethis::use_data(clear_creek, overwrite = TRUE)
 
-indian_creek <- rivermile::get_river_miles(klamath_rivers, "Indian Creek")
+indian_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Indian Creek")
 usethis::use_data(indian_creek, overwrite = TRUE)
 
-jenny_creek <- rivermile::get_river_miles(klamath_rivers, "Jenny Creek")
+jenny_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Jenny Creek")
 usethis::use_data(jenny_creek, overwrite = TRUE)
 
-link_river <- rivermile::get_river_miles(klamath_rivers, "Link River")
+link_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Link River")
 usethis::use_data(link_river, overwrite = TRUE)
 
-klamath_river <- rivermile::get_river_miles(klamath_rivers, "Klamath River")
+klamath_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Klamath River")
 usethis::use_data(klamath_river, overwrite = TRUE)
 
-lost_river <- rivermile::get_river_miles(klamath_rivers, "Lost River")
+lost_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Lost River")
 usethis::use_data(lost_river, overwrite = TRUE)
 
-salmon_river <- rivermile::get_river_miles(klamath_rivers, "Salmon River")
+salmon_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Salmon River")
 usethis::use_data(salmon_river, overwrite = TRUE)
 
-scott_river <- rivermile::get_river_miles(klamath_rivers, "Scott River")
+scott_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Scott River")
 usethis::use_data(scott_river, overwrite = TRUE)
 
-shasta_river <- rivermile::get_river_miles(klamath_rivers, "Shasta River")
+shasta_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Shasta River")
 usethis::use_data(shasta_river, overwrite = TRUE)
 
-sprague_river <- rivermile::get_river_miles(klamath_rivers, "Sprague River")
+sprague_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Sprague River")
 usethis::use_data(sprague_river, overwrite = TRUE)
 
-trinity_river <- rivermile::get_river_miles(klamath_rivers, "Trinity River")
+trinity_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Trinity River")
 usethis::use_data(trinity_river, overwrite = TRUE)
 
-williamson_river <- rivermile::get_river_miles(klamath_rivers, "Williamson River")
+williamson_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Williamson River")
 usethis::use_data(williamson_river, overwrite = TRUE)
 
-wood_river <- rivermile::get_river_miles(klamath_rivers, "Wood River")
+wood_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Wood River")
 usethis::use_data(wood_river, overwrite = TRUE)
 
-shasta_river |> 
-  ggplot() + 
-  geom_sf()
+```
 
+```{r}
+point_layers <- list(wood_river, williamson_river, trinity_river, sprague_river, 
+                     shasta_river, scott_river, salmon_river, lost_river, 
+                     klamath_river, link_river, jenny_creek, 
+                     indian_creek, clear_creek, bogus_creek, blue_creek)  
+
+# Ensure all layers have the same CRS before merging
+point_layers <- lapply(point_layers, function(layer) {
+  if (st_crs(layer) != st_crs(point_layers[[1]])) {
+    layer <- st_transform(layer, st_crs(point_layers[[1]]))
+  }
+  return(layer)
+})
+
+all_klamath_rivers_pts <- bind_rows(point_layers) %>%
+  st_as_sf() 
+
+usethis::use_data(all_klamath_rivers_pts, overwrite = TRUE)
+
+# all_klamath_rivers_pts |> 
+#   ggplot() +
+#   geom_sf()
+
+```
+
+```{r}
+knitr::knit_exit()
 ```
 
 
 ```{r eval=FALSE, include=FALSE}
 
-all_rivers <- unique(klamath_rivers$river)
+all_rivers <- unique(all_klamath_rivers_line$river)
 
 for(i in 1:length(all_rivers)) {
   
   name <- gsub(" ", "_", tolower(all_rivers[i]))
   
-  river <- rivermile::get_river_miles(klamath_rivers, all_rivers[i])
+  river <- rivermile::get_river_miles(all_klamath_rivers_line, all_rivers[i])
 
   assign(name, river, envir = .GlobalEnv)  # Assign river data to dynamically named variable
 
@@ -247,9 +272,6 @@ for(i in 1:length(all_rivers)) {
 
 ```
 
-```{r}
-knitr::knit_exit()
-```
 
 
 ### HUC exploration
