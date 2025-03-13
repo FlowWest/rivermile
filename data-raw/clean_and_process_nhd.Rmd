@@ -172,7 +172,7 @@ usethis::use_data(all_klamath_rivers_line, overwrite = TRUE)
 
 ## Assign River Mile Points 
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 unique(all_klamath_rivers_line$river)
 
 blue_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Blue Creek")
