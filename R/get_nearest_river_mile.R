@@ -84,7 +84,7 @@ find_nearest_river_miles <- function(points_sf) {
       }
     ) |>
     ungroup() |>
-    select(-river_name_lower)
+    select(-river_name_lower, -stream_short)
 
   return(with_rms)
 }
