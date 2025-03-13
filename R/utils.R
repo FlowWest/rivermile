@@ -1,0 +1,39 @@
+extract_waterbody <- function(names) {
+  names <- gsub("\\bRvr\\b", "River", names, ignore.case = TRUE)
+  names <- gsub("\\br\\b", "River", names, ignore.case = TRUE)
+
+  names <- stringr::str_extract(names, "(?i)(\\b(?:upper|lower|north|south|east|west|middle|fork|branch)?\\s*(?:\\w+\\s){0,3}(?:Creek|River))")
+
+  cleaned_names <- gsub("\\b(?:at|HOBO)\\b", "", names, ignore.case = TRUE)
+  result <- trimws(cleaned_names)
+  return(result)
+}
+
+extract_waterbody_short <- function(names) {
+  # Standardizing abbreviations for "River"
+  names <- gsub("\\bRvr\\b", "River", names, ignore.case = TRUE)
+  names <- gsub("\\br\\b", "River", names, ignore.case = TRUE)
+
+  # Remove unwanted prefixes like "Side Channel", "Branch", "Fork", etc.
+  names <- gsub("(?i)\\b(side channel|branch|fork|tributary|slough|stream)\\b\\s*", "", names)
+
+  # Remove "Upper" and "Lower" to keep only the core name
+  names <- gsub("(?i)\\b(upper|lower|east|west|north|south|middle)\\b\\s*", "", names)
+
+  # Extract only the main waterbody name (Creek or River)
+  names <- stringr::str_extract(names, "(?i)(\\b(?:north|south|east|west|middle)?\\s*(?:\\w+\\s){0,3}(?:Creek|River))")
+
+  # Remove unnecessary words like "at" or "HOBO"
+  cleaned_names <- gsub("\\b(?:at|HOBO)\\b", "", names, ignore.case = TRUE)
+
+  # Trim whitespace and return result
+  result <- trimws(cleaned_names)
+  return(result)
+}
+
+load_river_mile_data <- function(river_name) {
+  river_mile_data <- as.data.frame(do.call(`::`, list(pkg = "rivermile", name = river_name)))
+
+  return(river_mile_data)
+
+}

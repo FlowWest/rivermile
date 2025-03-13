@@ -1,14 +1,14 @@
 get_river_miles <- function(river_layer, river_name, interval_no = 10) {
 
-  interval <- interval_no #interval_no is 10 meters by default
-  line_length <- st_length(river_layer)
-  n_points <- as.numeric(line_length %/% interval)
-
   river_layer <- river_layer |>
     filter(river == river_name) |>
     st_combine() |>
     st_cast("LINESTRING") |>
     st_transform(crs = 32610)
+
+  interval <- interval_no #interval_no is 10 meters by default
+  line_length <- st_length(river_layer)
+  n_points <- as.numeric(line_length %/% interval)
 
   river_points <- st_line_sample(river_layer, n = n_points)  |>
     st_cast("POINT") |>

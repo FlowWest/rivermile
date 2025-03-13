@@ -193,7 +193,34 @@ usethis::use_data(jenny_creek, overwrite = TRUE)
 link_river <- rivermile::get_river_miles(klamath_rivers, "Link River")
 usethis::use_data(link_river, overwrite = TRUE)
 
-link_river |> 
+klamath_river <- rivermile::get_river_miles(klamath_rivers, "Klamath River")
+usethis::use_data(klamath_river, overwrite = TRUE)
+
+lost_river <- rivermile::get_river_miles(klamath_rivers, "Lost River")
+usethis::use_data(lost_river, overwrite = TRUE)
+
+salmon_river <- rivermile::get_river_miles(klamath_rivers, "Salmon River")
+usethis::use_data(salmon_river, overwrite = TRUE)
+
+scott_river <- rivermile::get_river_miles(klamath_rivers, "Scott River")
+usethis::use_data(scott_river, overwrite = TRUE)
+
+shasta_river <- rivermile::get_river_miles(klamath_rivers, "Shasta River")
+usethis::use_data(shasta_river, overwrite = TRUE)
+
+sprague_river <- rivermile::get_river_miles(klamath_rivers, "Sprague River")
+usethis::use_data(sprague_river, overwrite = TRUE)
+
+trinity_river <- rivermile::get_river_miles(klamath_rivers, "Trinity River")
+usethis::use_data(trinity_river, overwrite = TRUE)
+
+williamson_river <- rivermile::get_river_miles(klamath_rivers, "Williamson River")
+usethis::use_data(williamson_river, overwrite = TRUE)
+
+wood_river <- rivermile::get_river_miles(klamath_rivers, "Wood River")
+usethis::use_data(wood_river, overwrite = TRUE)
+
+shasta_river |> 
   ggplot() + 
   geom_sf()
 
@@ -210,7 +237,11 @@ for(i in 1:length(all_rivers)) {
   
   river <- rivermile::get_river_miles(klamath_rivers, all_rivers[i])
 
-  usethis::use_data(river, overwrite = TRUE)
+  assign(name, river, envir = .GlobalEnv)  # Assign river data to dynamically named variable
+
+  # Use get() to retrieve the dynamically named object and save it correctly
+  usethis::use_data(list = name, overwrite = TRUE)
+
 }
 
 
