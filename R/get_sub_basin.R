@@ -1,7 +1,7 @@
-#' Asign Sub Basin
+#' Assign Sub Basin
 #'
 #' This function takes an `sf` object containing sub basin location in the Klamath Basin (e.g., trinity, upper klamath, etc)
-#' and assignes a sub-basin to each data point.
+#' and assigns a sub-basin to each data point.
 #'
 #' @param data A data frame or `sf` object with location data.
 #' @param sub_basin An `sf` polygon object containing sub-basin geometries and names.
