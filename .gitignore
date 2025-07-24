@@ -5,3 +5,4 @@
 
 # Ignore shapefiles in data-raw
 data-raw/shapefiles/
+docs

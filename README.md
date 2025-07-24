@@ -2,7 +2,7 @@
 
 ## Overview
 
-This package provides tools for working with river mile data, allowing users to find the nearest river mile for spatial points along water bodies.
+This package provides tools for calculating river miles of monitoring locations along rivers and streams.
 
 ## Installation
 
