@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_sub_basin.R
 \name{assign_sub_basin}
 \alias{assign_sub_basin}
-\title{Asign Sub Basin}
+\title{Assign Sub Basin}
 \usage{
 assign_sub_basin(
   data,
@@ -23,5 +23,5 @@ A data frame (or sf object) with a new `sub_basin` column in lowercase.
 }
 \description{
 This function takes an `sf` object containing sub basin location in the Klamath Basin (e.g., trinity, upper klamath, etc)
-and assignes a sub-basin to each data point.
+and assigns a sub-basin to each data point.
 }
