@@ -5,7 +5,6 @@ on:
     branches: [main, master]
   pull_request:
   release:
-
     types: [published]
   workflow_dispatch:
 
@@ -33,9 +32,19 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::pkgdown, local::.
-          needs: website
+         with:
+          extra-packages: |
+           any::pkgdown
+           any::rmarkdown
+           any::dplyr
+           any::sf
+           any::stringr
+           any::magrittr
+           local::.
+         needs: website
+
+      - name: Render README
+        run: Rscript -e "if (file.exists('README.Rmd')) rmarkdown::render('README.Rmd')"
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
