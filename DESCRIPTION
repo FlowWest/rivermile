@@ -20,3 +20,4 @@ Suggests:
     rmarkdown,
     testthat
 URL: https://flowwest.github.io/rivermile/
+RoxygenNote: 7.3.2
