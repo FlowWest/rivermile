@@ -12,9 +12,12 @@ reference:
   - title: Core Functions
     desc: Utilities for matching spatial points to river miles
     contents:
+      - assign_sub_basin
       - extract_waterbody
       - extract_waterbody_short
+      - find_nearest_river_miles
       - gage_data_format
+      - get_nearest_river_mile_pt
       - load_river_mile_data
 
 navbar:
