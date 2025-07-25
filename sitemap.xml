@@ -1,0 +1,14 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/assign_sub_basin.html</loc></url>
+<url><loc>/reference/extract_waterbody.html</loc></url>
+<url><loc>/reference/extract_waterbody_short.html</loc></url>
+<url><loc>/reference/find_nearest_river_miles.html</loc></url>
+<url><loc>/reference/gage_data_format.html</loc></url>
+<url><loc>/reference/get_nearest_river_mile_pt.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/load_river_mile_data.html</loc></url>
+</urlset>
+
