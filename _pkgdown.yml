@@ -1,7 +1,10 @@
+
+url: https://github.com/flowwest/rivermile
+
 template:
   bootstrap: 5
   bootswatch: flatly
-  favicon: man/figures/favicon.ico  # path to your favicon file
+  favicon: man/figures/favicon.ico
 
 home:
   title: rivermile
@@ -9,8 +12,8 @@ home:
   strip_header: true
 
 reference:
-  - title: Core Functions
-    desc: Utilities for matching spatial points to river miles
+  - title: "Core Functions"
+    desc: "Utilities for matching spatial points to river miles"
     contents:
       - assign_sub_basin
       - extract_waterbody
@@ -21,9 +24,7 @@ reference:
       - load_river_mile_data
 
 navbar:
-  title: rivermile
-  left:
-    - text: Reference
-      href: reference/index.html
-    - text: GitHub
-      href: https://github.com/flowwest/rivermile
+  structure:
+    left:  [reference]
+    right: [search]
+
