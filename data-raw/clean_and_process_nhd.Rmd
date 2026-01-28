@@ -33,6 +33,12 @@ ggplot() +
   geom_sf(data = hucs) +
   theme_minimal()
 
+
+```
+```{r}
+klamath_hucs <- hucs |> select(huc8, name, geometry)
+
+usethis::use_data(klamath_hucs, overwrite = TRUE)
 ```
 
 ### Load NHD layers from geodatabase 
@@ -47,6 +53,9 @@ nhd_flowline_vaa<- st_read(here::here('data-raw', 'shapefiles', 'NHDPLUS_H_1801_
   janitor::clean_names() 
 
 nhd_flowline_raw <- st_read(here::here('data-raw', 'shapefiles', 'NHDPLUS_H_1801_HU4_GDB.gdb'), layer = 'NHDFlowline') |> 
+  janitor::clean_names() 
+
+external_crosswalk <- st_read(here::here('data-raw', 'shapefiles', 'NHDPLUS_H_1801_HU4_GDB.gdb'), layer = 'ExternalCrosswalk') |> 
   janitor::clean_names() 
 
 huc_12 <- st_read(here::here('data-raw', 'shapefiles', 'NHDPLUS_H_1801_HU4_GDB.gdb'), layer = 'WBDHU12') |> 
@@ -86,6 +95,8 @@ ggplot() +
   geom_sf(data = nhd_flowline) +
   theme_minimal() +
   theme(legend.position = "none")
+
+usethis::use_data(nhd_flowline, overwrite = TRUE)
 
 ```
 
@@ -139,6 +150,8 @@ I decided to process the NHD file in QGIS - the project is saved within the `dat
 # Read in processed 
 
 processed_nhd <- sf::read_sf(here::here('data-raw', 'shapefiles', 'cleaned_nhd_layer.shp'))
+
+usethis::use_data(processed_nhd, overwrite = TRUE)
 
 leaflet(processed_nhd) |> 
   addTiles() |> 
