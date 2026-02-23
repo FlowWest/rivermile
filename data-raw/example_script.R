@@ -32,7 +32,10 @@ wqx_ph <- wq_data_board |>
 
 wqx_pH_with_rivermiles <- rivermile::find_nearest_river_miles(wqx_ph)
 
-
+# non aws
+temp <- klamathWaterData::temperature_gage |>
+  mutate(stream_short = stream)
+temp_with_rm <- rivermile::find_nearest_river_miles(temp)
 
 leaflet() |>
   addTiles() |>

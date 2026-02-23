@@ -1,0 +1,122 @@
+---
+title: "Rivermile Implementation Workflow"
+author: "Maddee Wiggins (FlowWest)"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(rivermile)
+```
+
+### Get River Mile of a Specific Point
+
+For Klamath flow gage 11530500, get the river mile. 
+
+```{r}
+flow_gages <- klamathWaterData::flow_gage |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) 
+
+klamath_11530500 <- flow_gages |> filter(gage_id == "11530500")
+
+```
+
+There are two ways of calculating the river mile for a single point. 
+
+1) Using `rivermile::get_nearest_river_mile_pt`. This returns a single value of the river mile. 
+
+```{r}
+rivermile::get_nearest_river_mile_pt(rivermile::all_klamath_rivers_pts, klamath_11530500)
+```
+
+2) Using `rivermile::find_nearest_river_miles`. This returns an updated spatial dataframe with the river mile. 
+
+```{r}
+klamath_11530500_with_rm <- rivermile::find_nearest_river_miles(klamath_11530500) |> glimpse()
+```
+
+```{r echo=FALSE}
+pal_rm <- colorNumeric(
+  palette = "viridis",
+  domain  = rivermile::klamath_river$river_mile
+)
+
+leaflet() |> 
+  addProviderTiles(providers$CartoDB.Positron, group = "Positron") |>
+  addProviderTiles(providers$Esri.WorldImagery, group = "Imagery") |> 
+  addMarkers(data = klamath_11530500_with_rm, 
+             popup = ~paste0("Gage: ", gage_name, "<br>",
+                             "River mile: ", river_mile)) |> 
+  addCircleMarkers(
+    data = rivermile::klamath_river |> st_transform(4326),
+    radius = 3,
+    stroke = FALSE,
+    fillOpacity = 0.9,
+    fillColor = ~pal_rm(river_mile),
+    popup = ~paste0("River mile: ", river_mile),
+    group = "River miles"
+  ) |> 
+  addLegend(
+    pal = pal_rm,
+    values = rivermile::klamath_river$river_mile,
+    title = "River mile",
+    opacity = 1
+  ) 
+
+```
+
+### Get River Mile Locations from Gage Data
+
+This method calculates river miles for multiple gage locations. When the gage is outside of the package limits, it returns an error message and an NA for `river_mile`
+
+```{r}
+temperature <- klamathWaterData::temperature_gage
+```
+
+```{r message=FALSE, warning=FALSE}
+river_pts <- temperature |> 
+  st_as_sf(coords = c('longitude', 'latitude'), crs = 4326) 
+
+rms <- rivermile::find_nearest_river_miles(river_pts) |> glimpse()
+```
+
+```{r echo=FALSE}
+pal_rm <- colorNumeric(
+  palette = "viridis",
+  domain  = rivermile::all_klamath_rivers_pts$river_mile
+)
+
+leaflet() |>
+  addTiles() |>
+  addCircleMarkers(
+    data = rivermile::all_klamath_rivers_pts,
+    radius = 3,
+    stroke = FALSE,
+    fillOpacity = 0.9,
+    fillColor = ~pal_rm(river_mile),
+    popup = ~paste0("River: ", river, "<br>",
+                    "River mile: ", river_mile),
+    group = "River miles"
+  ) |> 
+  addCircleMarkers(data = rms |> filter(!is.na(river_mile)),
+                   radius = 8, 
+                   fillOpacity = 0.8, 
+                   fillColor = "green",
+                   color = "darkgreen",
+                   popup = ~paste0("River: ", stream, "<br>",
+                                   "River mile: ", river_mile, "<br>",
+                                   "Gage Name: ", gage_name)) |> 
+  addLegend(
+    pal = pal_rm,
+    values =  rivermile::all_klamath_rivers_pts$river_mile,
+    title = "River mile",
+    opacity = 1
+  ) 
+
+
+```

@@ -155,7 +155,7 @@ usethis::use_data(processed_nhd, overwrite = TRUE)
 
 leaflet(processed_nhd) |> 
   addTiles() |> 
- addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
+  addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
                                "id: ", processed_nhd$gnis_id))
 
 ```
@@ -169,7 +169,7 @@ all_klamath_rivers_line <- processed_nhd |>
   group_by(river) |> 
   summarise(geometry = st_union(geometry)) |>  
   st_cast("MULTILINESTRING") 
- # st_transform(crs = 32610) 
+# st_transform(crs = 32610) 
 
 leaflet(all_klamath_rivers_line) |> 
   addTiles() |> 
@@ -188,49 +188,109 @@ usethis::use_data(all_klamath_rivers_line, overwrite = TRUE)
 ```{r eval=FALSE, include=FALSE}
 unique(all_klamath_rivers_line$river)
 
-blue_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Blue Creek")
+blue_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Blue Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
 usethis::use_data(blue_creek, overwrite = TRUE)
 
-bogus_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Bogus Creek")
+bogus_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                          "Bogus Creek",
+                                          interval_m = 10,
+                                          downstream_end = "end",
+                                          crs_proj = 32610)
 usethis::use_data(bogus_creek, overwrite = TRUE)
 
-clear_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Clear Creek")
+clear_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                          "Clear Creek",
+                                          interval_m = 10,
+                                          downstream_end = "end",
+                                          crs_proj = 32610)
 usethis::use_data(clear_creek, overwrite = TRUE)
 
-indian_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Indian Creek")
+indian_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                           "Indian Creek",
+                                           interval_m = 10,
+                                           downstream_end = "end",
+                                           crs_proj = 32610)
 usethis::use_data(indian_creek, overwrite = TRUE)
 
-jenny_creek <- rivermile::get_river_miles(all_klamath_rivers_line, "Jenny Creek")
+jenny_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                          "Jenny Creek",
+                                          interval_m = 10,
+                                          downstream_end = "end",
+                                          crs_proj = 32610)
 usethis::use_data(jenny_creek, overwrite = TRUE)
 
-link_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Link River")
+link_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Link River",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
 usethis::use_data(link_river, overwrite = TRUE)
 
-klamath_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Klamath River")
+klamath_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                            "Klamath River",
+                                            interval_m = 10,
+                                            downstream_end = "end",
+                                            crs_proj = 32610)
 usethis::use_data(klamath_river, overwrite = TRUE)
 
-lost_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Lost River")
+lost_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Lost River",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
 usethis::use_data(lost_river, overwrite = TRUE)
 
-salmon_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Salmon River")
+salmon_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                           "Salmon River",
+                                           interval_m = 10,
+                                           downstream_end = "end",
+                                           crs_proj = 32610)
 usethis::use_data(salmon_river, overwrite = TRUE)
 
-scott_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Scott River")
+scott_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                          "Scott River",
+                                          interval_m = 10,
+                                          downstream_end = "end",
+                                          crs_proj = 32610)
 usethis::use_data(scott_river, overwrite = TRUE)
 
-shasta_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Shasta River")
+shasta_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                           "Shasta River",
+                                           interval_m = 10,
+                                           downstream_end = "end",
+                                           crs_proj = 32610)
 usethis::use_data(shasta_river, overwrite = TRUE)
 
-sprague_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Sprague River")
+sprague_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                            "Sprague River",
+                                            interval_m = 10,
+                                            downstream_end = "end",
+                                            crs_proj = 32610)
 usethis::use_data(sprague_river, overwrite = TRUE)
 
-trinity_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Trinity River")
+trinity_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                            "Trinity River",
+                                            interval_m = 10,
+                                            downstream_end = "end",
+                                            crs_proj = 32610)
 usethis::use_data(trinity_river, overwrite = TRUE)
 
-williamson_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Williamson River")
+williamson_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                               "Williamson River",
+                                               interval_m = 10,
+                                               downstream_end = "end",
+                                               crs_proj = 32610)
 usethis::use_data(williamson_river, overwrite = TRUE)
 
-wood_river <- rivermile::get_river_miles(all_klamath_rivers_line, "Wood River")
+wood_river <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Wood River",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
 usethis::use_data(wood_river, overwrite = TRUE)
 
 ```
@@ -274,12 +334,12 @@ for(i in 1:length(all_rivers)) {
   name <- gsub(" ", "_", tolower(all_rivers[i]))
   
   river <- rivermile::get_river_miles(all_klamath_rivers_line, all_rivers[i])
-
+  
   assign(name, river, envir = .GlobalEnv)  # Assign river data to dynamically named variable
-
+  
   # Use get() to retrieve the dynamically named object and save it correctly
   usethis::use_data(list = name, overwrite = TRUE)
-
+  
 }
 
 
@@ -370,10 +430,10 @@ leaflet() |>
 
 ```{r}
 get_nearest_river_mile <- function(river_mile_points, locations) {
-
+  
   distances <- st_distance(locations, river_mile_points)
   min_distance_index <- which.min(distances)
-
+  
   nearest_river_mile <- river_mile_points[min_distance_index, ]
   
   return(nearest_river_mile$river_mile)
@@ -399,7 +459,7 @@ leaflet() |>
 Read in Temperature gage locations to find the nearest river miles
 
 ```{r}
-temperature <- read_csv(here::here('data-raw', 'temperature_usgs.csv')) |> glimpse()
+temperature <- klamathWaterData::temperature_gage |> glimpse()
 ```
 
 ```{r}

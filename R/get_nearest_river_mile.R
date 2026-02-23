@@ -53,7 +53,7 @@ get_nearest_river_mile_pt <- function(river_mile_points, spatial_pt) {
 #' @export
 find_nearest_river_miles <- function(points_sf) {
   with_rms <- points_sf |>
-    mutate(river_name_lower = gsub(" ", "_", tolower(stream_short))) |>
+    mutate(river_name_lower = gsub(" ", "_", tolower(stream))) |>
     rowwise() |>
     mutate(
       river_mile = {
@@ -84,7 +84,7 @@ find_nearest_river_miles <- function(points_sf) {
       }
     ) |>
     ungroup() |>
-    select(-river_name_lower, -stream_short)
+    select(-river_name_lower)
 
   return(with_rms)
 }
