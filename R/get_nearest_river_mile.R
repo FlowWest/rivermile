@@ -46,7 +46,7 @@ get_nearest_river_mile_pt <- function(river_mile_points, spatial_pt) {
 #' This function takes an `sf` object containing point locations (e.g., sampling points)
 #' and finds the nearest river mile for each point.
 #'
-#' @param points_sf An `sf` object containing points with a `stream_short` column.
+#' @param points_sf An `sf` object containing points with a `stream` column.
 #' @return An `sf` object with an added `nearest_river_mile` column.
 #' If no river mile data exists, the value will be `NA`.
 #' @import sf dplyr
