@@ -108,13 +108,38 @@ usethis::use_data(nhd_flowline, overwrite = TRUE)
 rivers <- c('Klamath River', 'Trinity River', 'Sprague River',
             'Williamson River', 'Wood River', 'Lost River', 'Shasta River', 
             'Scott River', 'Salmon River', 'Blue Creek', 'Bogus Creek', 'Clear Creek',
-            'Indian Creek', 'Link River', 'Jenny Creek')
+            'Indian Creek', 'Link River', 'Jenny Creek',
+            'Spencer Creek', 'Shovel Creek',' Fall Creek', 'Camp Creek', 'Scotch Creek')
 
 nhd_flowline_filtered <- nhd_flowline |> 
   filter(gnis_name %in% rivers) |> 
   st_transform(crs = "+proj=longlat +datum=WGS84") |> 
   st_zm()
 
+```
+
+Add new rivers:
+
+```{r}
+rivers_to_add <- c('Spencer Creek', 'Shovel Creek','Fall Creek', 'Camp Creek', 'Scotch Creek')
+
+ids <- c('01154962', '01118498', '00223366', '00260026', '00260027') 
+
+nhd_flowline_filtered_new_rivers <- nhd_flowline |> 
+  filter(gnis_name %in% rivers_to_add) |> 
+  st_transform(crs = "+proj=longlat +datum=WGS84") |> 
+  st_zm() |> 
+  filter(!(gnis_id %in% c(ids))) |> 
+  st_set_geometry('shape') |> 
+  rename(geometry = shape)
+
+leaflet(data = nhd_flowline_filtered_new_rivers) |> 
+  addTiles() |> 
+  addPolylines(popup = ~paste0("name: ", gnis_name, "<br>",
+                               "id: ", gnis_id))
+
+
+nhd_flowline_filtered <- bind_rows(nhd_flowline_filtered, nhd_flowline_filtered_new_rivers)
 ```
 
 ### View filtered NHD layers 
@@ -149,14 +174,23 @@ I decided to process the NHD file in QGIS - the project is saved within the `dat
 ```{r}
 # Read in processed 
 
-processed_nhd <- sf::read_sf(here::here('data-raw', 'shapefiles', 'cleaned_nhd_layer.shp'))
+processed_nhd <- sf::read_sf(here::here('data-raw', 'shapefiles', 'cleaned_nhd_layer.shp')) 
 
 usethis::use_data(processed_nhd, overwrite = TRUE)
 
-leaflet(processed_nhd) |> 
+names(nhd_flowline_filtered_new_rivers)[
+  names(nhd_flowline_filtered_new_rivers) != attr(nhd_flowline_filtered_new_rivers, "sf_column")
+] <- names(processed_nhd)[
+  names(processed_nhd) != attr(processed_nhd, "sf_column")
+]
+
+processed <- processed_nhd |> 
+  bind_rows(nhd_flowline_filtered_new_rivers)
+
+leaflet(processed) |> 
   addTiles() |> 
-  addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
-                               "id: ", processed_nhd$gnis_id))
+  addPolylines(popup = ~paste0("name: ", processed$gnis_nm, "<br>",
+                               "id: ", processed$gnis_id))
 
 ```
 
@@ -164,7 +198,7 @@ leaflet(processed_nhd) |>
 
 ```{r}
 
-all_klamath_rivers_line <- processed_nhd |> 
+all_klamath_rivers_line <- processed |> 
   rename(river = gnis_nm) |> 
   group_by(river) |> 
   summarise(geometry = st_union(geometry)) |>  
@@ -293,13 +327,50 @@ wood_river <- rivermile::get_river_miles(all_klamath_rivers_line,
                                          crs_proj = 32610)
 usethis::use_data(wood_river, overwrite = TRUE)
 
+# new rivers
+spencer_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Spencer Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
+usethis::use_data(spencer_creek, overwrite = TRUE)
+
+shovel_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Shovel Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
+usethis::use_data(shovel_creek, overwrite = TRUE)
+
+fall_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Fall Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
+usethis::use_data(fall_creek, overwrite = TRUE)
+
+camp_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Camp Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
+usethis::use_data(camp_creek, overwrite = TRUE)
+
+scotch_creek <- rivermile::get_river_miles(all_klamath_rivers_line, 
+                                         "Scotch Creek",
+                                         interval_m = 10,
+                                         downstream_end = "end",
+                                         crs_proj = 32610)
+usethis::use_data(scotch_creek, overwrite = TRUE)
+
 ```
 
 ```{r}
 point_layers <- list(wood_river, williamson_river, trinity_river, sprague_river, 
                      shasta_river, scott_river, salmon_river, lost_river, 
                      klamath_river, link_river, jenny_creek, 
-                     indian_creek, clear_creek, bogus_creek, blue_creek)  
+                     indian_creek, clear_creek, bogus_creek, blue_creek,
+                     spencer_creek, shovel_creek, fall_creek, camp_creek, scotch_creek)  
 
 # Ensure all layers have the same CRS before merging
 point_layers <- lapply(point_layers, function(layer) {

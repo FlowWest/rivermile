@@ -7,7 +7,7 @@
 find_nearest_river_miles(points_sf)
 }
 \arguments{
-\item{points_sf}{An `sf` object containing points with a `stream_short` column.}
+\item{points_sf}{An `sf` object containing points with a `stream` column.}
 }
 \value{
 An `sf` object with an added `nearest_river_mile` column.
