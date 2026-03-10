@@ -176,7 +176,6 @@ I decided to process the NHD file in QGIS - the project is saved within the `dat
 
 processed_nhd <- sf::read_sf(here::here('data-raw', 'shapefiles', 'cleaned_nhd_layer.shp')) 
 
-usethis::use_data(processed_nhd, overwrite = TRUE)
 
 names(nhd_flowline_filtered_new_rivers)[
   names(nhd_flowline_filtered_new_rivers) != attr(nhd_flowline_filtered_new_rivers, "sf_column")
@@ -187,10 +186,14 @@ names(nhd_flowline_filtered_new_rivers)[
 processed <- processed_nhd |> 
   bind_rows(nhd_flowline_filtered_new_rivers)
 
-leaflet(processed) |> 
+processed_nhd <- processed
+usethis::use_data(processed_nhd, overwrite = TRUE)
+
+
+leaflet(processed_nhd) |> 
   addTiles() |> 
-  addPolylines(popup = ~paste0("name: ", processed$gnis_nm, "<br>",
-                               "id: ", processed$gnis_id))
+  addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
+                               "id: ", processed_nhd$gnis_id))
 
 ```
 
