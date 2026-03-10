@@ -100,6 +100,20 @@ usethis::use_data(nhd_flowline, overwrite = TRUE)
 
 ```
 
+#### Get Catchments
+
+source: https://www.epa.gov/waterdata/get-nhdplus-national-hydrography-dataset-plus-data
+```{r}
+layers <- st_layers(here::here("data-raw", "shapefiles", "nhdplus_epasnapshot2022_or.gdb"))
+
+catchment_fabric_or <- st_read(here::here("data-raw", "shapefiles", "nhdplus_epasnapshot2022_or.gdb"), layer =  "catchment_fabric_or")
+
+layers <- st_layers(here::here("data-raw", "shapefiles", "18", "NHDPLUS_H_1801_HU4_GDB.gdb"))
+
+catchment_ca <- st_read(here::here("data-raw", "shapefiles", "18", "NHDPLUS_H_1801_HU4_GDB.gdb"), layer =  "NHDPlusCatchment")
+
+```
+
 ### Filter NHD layer to mainstem rivers/tribs
 
 ```{r message=FALSE, warning=FALSE}
@@ -194,6 +208,33 @@ leaflet(processed_nhd) |>
   addTiles() |> 
   addPolylines(popup = ~paste0("name: ", processed_nhd$gnis_nm, "<br>",
                                "id: ", processed_nhd$gnis_id))
+
+```
+
+### Catchment processing: 
+
+```{r}
+nhd_catchment_ids <- processed_nhd |> 
+  rename(nhd_plus_id = nhd_pl_) |> 
+  pull(nhd_plus_id) |> unique()
+
+catchments_or <- catchment_fabric_or |> filter(nhdplusid %in% nhd_catchment_ids)
+
+catchments_klamath_ca <- catchment_ca |> 
+  filter(NHDPlusID %in% nhd_catchment_ids) |> 
+ rename(nhdplusid = NHDPlusID, 
+        areasqkm = AreaSqKm) |> 
+  select(nhdplusid, areasqkm) |> 
+  st_set_geometry("SHAPE") |> 
+  rename(geometry = SHAPE) 
+
+nhd_catchments <- catchments_or |> 
+  select(nhdplusid, areasqkm) |> 
+  st_set_geometry("Shape") |> 
+  rename(geometry = Shape) |> 
+  bind_rows(catchments_klamath_ca)
+
+usethis::use_data(nhd_catchments, overwrite = TRUE)
 
 ```
 
