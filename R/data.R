@@ -1,0 +1,33 @@
+#' @title NHD Catchments
+#' @name nhd_catchments
+#' @description National Hydrography Dataset of catchments, filtered to nhdplusids for rivers included in the Klamath Basin Science Collaborative. Source: https://www.epa.gov/waterdata/get-nhdplus-national-hydrography-dataset-plus-data
+#' @format A tibble with 4591 rows and 13 columns
+#' \itemize{
+#'   \item \code{nhdplusid}: unique identifier for the NHD dataset
+#'   \item \code{areasqkm}: area of catchment (sq km)
+#'   \item \code{geometry}: sf geometry
+#'   }
+'nhd_catchments'
+
+#' @title NHD Flowlines
+#' @name processed_nhd
+#' @description National Hydrography Dataset of flowlines, filtered to nhdplusids for rivers included in the Klamath Basin Science Collaborative. Source:https://www.sciencebase.gov/catalog/item/5d30c29ae4b01d82ce84aa5e
+#' @format A tibble with 4236 rows and 73 columns
+'processed_nhd'
+
+#' @title All Klamath River Lines
+#' @name all_klamath_rivers_line
+#' @description National Hydrography Dataset of flowlines, processed and cleaned. Includes: Blue Creek, Bogus Creek, Camp Creek, Clear Creek, Fall Creek, Indian Creek, Jenny Creek, Klamath River, Link River, Lost River, Salmon River, Scotch Creek, Scott River, Shasta River, Shovel Creek, Spencer Creek, Sprague River, Trinity River, Williamson River, Wood River
+#' @format A sf df with 20 rows and 2 columns
+'all_klamath_rivers_line'
+
+#' @title Klamath River HUCs
+#' @name klamath_hucs
+#' @description National Hydrography Dataset of HUCs, processed and cleaned. Source: https://www.sciencebase.gov/catalog/item/5d30c29ae4b01d82ce84aa5e
+#' @format A sf df with 12 rows and 3 columns
+#' \itemize{
+#'   \item \code{huc8}: 8 digit HUC code
+#'   \item \code{name}: HUC name
+#'   \item \code{geometry}: sf polygon
+#'   }
+'klamath_hucs'
