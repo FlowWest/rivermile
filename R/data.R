@@ -31,3 +31,21 @@
 #'   \item \code{geometry}: sf polygon
 #'   }
 'klamath_hucs'
+
+#' Klamath Basin National Wildlife Refuge Complex boundaries
+#'
+#' Simplified polygon boundaries for the six National Wildlife Refuges
+#' comprising the Klamath Basin National Wildlife Refuge Complex (Bear
+#' Valley, Clear Lake, Klamath Marsh, Lower Klamath, Tule Lake, and Upper
+#' Klamath NWRs), spanning southern Oregon and northern California.
+#'
+#' @format An \code{sf} tibble with 6 rows and 2 variables:
+#' \describe{
+#'   \item{orgname}{Refuge name (character).}
+#'   \item{geometry}{Refuge boundary (\code{MULTIPOLYGON}, EPSG:4326).}
+#' }
+#' @source U.S. Fish and Wildlife Service, National Wildlife Refuge System
+#'   Boundaries feature service:
+#'   \url{https://services.arcgis.com/QVENGdaPbd4LUkLV/arcgis/rest/services/National_Wildlife_Refuge_System_Boundaries/FeatureServer/0}
+"klamath_refuges"
+
