@@ -49,3 +49,21 @@
 #'   \url{https://services.arcgis.com/QVENGdaPbd4LUkLV/arcgis/rest/services/National_Wildlife_Refuge_System_Boundaries/FeatureServer/0}
 "klamath_refuges"
 
+#' Klamath Basin lake and reservoir boundaries
+#'
+#' Dissolved polygon boundaries for the major named lakes and reservoirs in
+#' the Klamath Basin: Upper Klamath Lake, Lower Klamath Lake, Tule Lake,
+#' Clear Lake Reservoir, and Gerber
+#' Reservoir. Lakes made up of multiple NHD impoundment polygons (e.g. Tule
+#' Lake) are dissolved into a single feature.
+#'
+#' @format An \code{sf} tibble with 7 rows and 3 variables:
+#' \describe{
+#'   \item{lake_name}{Lake name (character).}
+#'   \item{area_sq_km}{Total surface area (sq km).}
+#'   \item{geometry}{Lake boundary (\code{POLYGON}/\code{MULTIPOLYGON}, EPSG:4326).}
+#' }
+#' @source NHDPlus High Resolution, NHDWaterbody feature class:
+#'   \url{https://www.epa.gov/waterdata/get-nhdplus-national-hydrography-dataset-plus-data}
+"klamath_lakes"
+
