@@ -4,12 +4,10 @@ url: https://github.com/flowwest/rivermile
 template:
   bootstrap: 5
   bootswatch: flatly
-  favicon: man/figures/favicon.ico
 
 home:
   title: rivermile
   sidebar: false
-  strip_header: true
 
 reference:
   - title: "Core Functions"
@@ -21,7 +19,17 @@ reference:
       - find_nearest_river_miles
       - gage_data_format
       - get_nearest_river_mile_pt
+      - get_river_miles
       - load_river_mile_data
+  - title: "Datasets"
+    desc: "Spatial layers included with the package"
+    contents:
+      - all_klamath_rivers_line
+      - klamath_hucs
+      - klamath_lakes
+      - klamath_refuges
+      - nhd_catchments
+      - processed_nhd
 
 navbar:
   structure:

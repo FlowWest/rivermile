@@ -19,5 +19,6 @@ Suggests:
     pkgdown,
     rmarkdown,
     testthat
-URL: https://flowwest.github.io/rivermile/
+URL: https://flowwest.github.io/rivermile/, https://github.com/flowwest/rivermile
+BugReports: https://github.com/flowwest/rivermile/issues
 RoxygenNote: 7.3.3
