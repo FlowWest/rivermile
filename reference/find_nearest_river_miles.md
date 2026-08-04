@@ -13,7 +13,7 @@ find_nearest_river_miles(points_sf)
 
 - points_sf:
 
-  An \`sf\` object containing points with a \`stream_short\` column.
+  An \`sf\` object containing points with a \`stream\` column.
 
 ## Value
 

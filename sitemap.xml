@@ -2,13 +2,20 @@
 <url><loc>https://github.com/flowwest/rivermile/404.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/authors.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/index.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/all_klamath_rivers_line.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/assign_sub_basin.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/extract_waterbody.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/extract_waterbody_short.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/find_nearest_river_miles.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/gage_data_format.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/get_nearest_river_mile_pt.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/get_river_miles.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/index.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/klamath_hucs.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/klamath_lakes.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/klamath_refuges.html</loc></url>
 <url><loc>https://github.com/flowwest/rivermile/reference/load_river_mile_data.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/nhd_catchments.html</loc></url>
+<url><loc>https://github.com/flowwest/rivermile/reference/processed_nhd.html</loc></url>
 </urlset>
 

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="rivermile">
 <meta name="description" content="This package provides tools for working with river mile data, allowing users to find the nearest river mile for spatial points along water bodies.">
@@ -51,7 +51,11 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="rivermile">
+<code>rivermile</code><a class="anchor" aria-label="anchor" href="#rivermile"></a>
+</h1>
+</div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -71,11 +75,15 @@
 <p>This function takes an <code>sf</code> object containing point locations (e.g., sampling points) and finds the nearest river mile for each point. If a location is outside of the bounds of the processed data, an <code>NA</code> is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">river_miles</span> <span class="op">&lt;-</span> <span class="fu">rivermile</span><span class="fu">::</span><span class="fu"><a href="reference/find_nearest_river_miles.html">find_nearest_river_miles</a></span><span class="op">(</span><span class="va">points_sp_df</span><span class="op">)</span></span></code></pre></div>
+<p>Use the <code>rivermile</code> package to get consistent geometries:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">rivermile</span><span class="fu">::</span><span class="va"><a href="reference/all_klamath_rivers_line.html">all_klamath_rivers_line</a></span></span>
+<span><span class="fu">rivermile</span><span class="fu">::</span><span class="va"><a href="reference/klamath_hucs.html">klamath_hucs</a></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
 </h3>
-<p>The package is currently only set up to process rivers of interest in the Klamath River watershed HUC6 180102, which includes: Blue Creek, Bogus Creek, Clear Creek, Indian Creek, Jenny Creek, Klamath River, Link River, Lost River, Salmon River, Scott River, Shasta River, Sprague River, Trinity River, Williamson River, and Wood River.</p>
+<p>The package is currently only set up to process rivers of interest in the Klamath River watershed HUC6 180102, which includes: Blue Creek, Bogus Creek, Clear Creek, Indian Creek, Jenny Creek, Klamath River, Link River, Lost River, Salmon River, Scott River, Shasta River, Sprague River, Trinity River, Williamson River, Wood River, Camp Creek, Fall Creek, Scotch Creek, Shovel Creek, and Spencer Creek.</p>
 <p>If a point is outside of this range, an NA is returned.</p>
 </div>
 </div>
@@ -89,7 +97,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
