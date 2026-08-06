@@ -66,15 +66,27 @@ leaflet(klamath_lakes_raw) %>%
 
 # process data ------------------------------------------------------------
 
+tule_lake_parts <- klamath_lakes_raw |>
+  filter(GNIS_Name == "Tule Lake") |>
+  st_cast("POLYGON", warn = FALSE)
+tule_lake_main <- tule_lake_parts[which.max(st_area(tule_lake_parts)), ]
+
+klamath_lakes_new <- klamath_lakes_raw |>
+  filter(GNIS_Name != "Tule Lake") |>
+  bind_rows(tule_lake_main)
+
 # Some lakes (e.g. Tule Lake) are split into multiple impoundment polygons;
 # dissolve to one feature per named lake.
-klamath_lakes <- klamath_lakes_raw |>
+klamath_lakes <- klamath_lakes_new |>
   janitor::clean_names() |>
   group_by(gnis_name) |>
   summarise(area_sq_km = sum(area_sq_km), .groups = "drop") |>
   mutate(gnis_name = tolower(gnis_name)) |>
   rename(lake_name = gnis_name) |>
   glimpse()
+
+ggplot() +
+  geom_sf(data = klamath_lakes)
 
 # save data ---------------------------------------------------------------
 usethis::use_data(klamath_lakes, overwrite = TRUE)
